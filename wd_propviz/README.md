@@ -9,6 +9,12 @@ WIP
 ## Usage/Examples
 
 ```lua
+Pass the model name and max distance, eg:
+local modelName = "p_cottonbox01x"
+local maxDistance = 10.0
+
+or place them directly in the export.
+
 local coords, rotation = exports.wd_propviz:visualizePlacement(modelName, maxDistance)
 
     if coords and rotation then
