@@ -76,10 +76,6 @@ local function visualizePlacement(modelName, maxDistance)
 
             if distance > maxDistance then
                 SetEntityAlpha(objectHandle, 0, false)
-                if not placementAreaNotificationShown then
-                    RSGCore.Functions.Notify("You are out of the placement area, please return", "error")
-                    placementAreaNotificationShown = true
-                end
             else
                 if distanceFromPlayer <= maxDistance then
                     SetEntityCoords(objectHandle, coords.x, coords.y, coords.z, false, false, false, false)
@@ -87,7 +83,6 @@ local function visualizePlacement(modelName, maxDistance)
                     FreezeEntityPosition(objectHandle, true)
                     SetEntityRotation(objectHandle, 0.0, 0.0, objectRotation, 2, true)
                     SetEntityAlpha(objectHandle, 128, false)
-                    placementAreaNotificationShown = false
                 else
                     SetEntityAlpha(objectHandle, 0, false)
                 end
