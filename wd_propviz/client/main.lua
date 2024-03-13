@@ -1,3 +1,6 @@
+-- ^ ---------------------------------------------------------------------
+-- ^ ---------------------------[Locals]----------------------------------
+-- ^ ---------------------------------------------------------------------
 
 local RSGCore = exports['rsg-core']:GetCoreObject()
 
@@ -69,19 +72,15 @@ local function visualizePlacement(modelName, maxDistance)
         local playerCoords = GetEntityCoords(playerPed)
         local hit, coords, entity = rayCastGamePlayCamera(1000.0)
         if hit and objectHandle then
-            local distance = #(playerCoords - coords)
-            local distanceFromStart = #(playerCoords - startingCoords)
+            local distance = #(coords - startingCoords)
+            local distanceFromPlayer = #(playerCoords - coords)
 
             drawText(Config.PlacementModeText, 0.5, 0.9, 0.5, 0.5, true, 255, 255, 255, 255, true)
 
-            if distanceFromStart > maxDistance then
-                DeleteEntity(objectHandle)
-                objectHandle = nil
-                placementMode = false
-                RSGCore.Functions.Notify("You have moved too far from the starting position. Object placement cancelled.", "error")
-                return
+            if distance > maxDistance then
+                SetEntityAlpha(objectHandle, 0, false)
             else
-                if distance <= maxDistance then
+                if distanceFromPlayer <= maxDistance then
                     SetEntityCoords(objectHandle, coords.x, coords.y, coords.z, false, false, false, false)
                     SetEntityCollision(objectHandle, false, false)
                     FreezeEntityPosition(objectHandle, true)
@@ -91,7 +90,7 @@ local function visualizePlacement(modelName, maxDistance)
                     SetEntityAlpha(objectHandle, 0, false)
                 end
 
-                if distance > maxExistenceDistance then
+                if distanceFromPlayer > maxExistenceDistance then
                     DeleteEntity(objectHandle)
                     objectHandle = nil
                     placementMode = false
