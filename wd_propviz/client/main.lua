@@ -1,7 +1,3 @@
--- ^ ---------------------------------------------------------------------
--- ^ ---------------------------[Locals]----------------------------------
--- ^ ---------------------------------------------------------------------
-
 local RSGCore = exports['rsg-core']:GetCoreObject()
 
 local function drawText(str, x, y, w, h, enableShadow, col1, col2, col3, a, centre)
@@ -46,6 +42,7 @@ local function visualizePlacement(modelName, maxDistance)
     local startingCoords = nil
     local placementMode = true
     local objectRotation = 0.0
+    local rotationSpeed = 0.25 -- Adjust this value to change the rotation speed
 
     maxDistance = maxDistance or Config.DefaultMaxDistance
     local maxExistenceDistance = Config.MaxExistenceDistance
@@ -79,6 +76,10 @@ local function visualizePlacement(modelName, maxDistance)
 
             if distance > maxDistance then
                 SetEntityAlpha(objectHandle, 0, false)
+                if not placementAreaNotificationShown then
+                    RSGCore.Functions.Notify("You are out of the placement area, please return", "error")
+                    placementAreaNotificationShown = true
+                end
             else
                 if distanceFromPlayer <= maxDistance then
                     SetEntityCoords(objectHandle, coords.x, coords.y, coords.z, false, false, false, false)
@@ -86,6 +87,7 @@ local function visualizePlacement(modelName, maxDistance)
                     FreezeEntityPosition(objectHandle, true)
                     SetEntityRotation(objectHandle, 0.0, 0.0, objectRotation, 2, true)
                     SetEntityAlpha(objectHandle, 128, false)
+                    placementAreaNotificationShown = false
                 else
                     SetEntityAlpha(objectHandle, 0, false)
                 end
@@ -98,13 +100,13 @@ local function visualizePlacement(modelName, maxDistance)
                     return
                 end
 
-                if IsControlJustPressed(0, Config.Keybinds.RotateLeft) then -- Left arrow key
-                    objectRotation = objectRotation - 5.0
+                if IsControlPressed(0, Config.Keybinds.RotateLeft) then -- Left arrow key
+                    objectRotation = objectRotation - (11.25 * rotationSpeed)
                     if objectRotation < 0.0 then
                         objectRotation = objectRotation + 360.0
                     end
-                elseif IsControlJustPressed(0, Config.Keybinds.RotateRight) then -- Right arrow key
-                    objectRotation = objectRotation + 5.0
+                elseif IsControlPressed(0, Config.Keybinds.RotateRight) then -- Right arrow key
+                    objectRotation = objectRotation + (11.25 * rotationSpeed)
                     if objectRotation >= 360.0 then
                         objectRotation = objectRotation - 360.0
                     end
